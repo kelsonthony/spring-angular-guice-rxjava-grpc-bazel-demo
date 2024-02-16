@@ -1,1 +1,1 @@
-# spring-guice-rxjava-bazel-grpc-demo
+# spring-angular-guice-rxjava-bazel-grpc-demo
