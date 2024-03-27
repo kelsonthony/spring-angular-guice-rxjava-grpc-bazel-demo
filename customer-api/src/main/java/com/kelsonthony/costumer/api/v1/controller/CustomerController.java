@@ -5,6 +5,7 @@ import com.kelsonthony.costumer.api.assembler.CustomerModelAssembler;
 import com.kelsonthony.costumer.api.input.CustomerInput;
 import com.kelsonthony.costumer.api.disassembler.CustomerInputDisassembler;
 import com.kelsonthony.costumer.api.model.CustomerModel;
+import com.kelsonthony.costumer.core.security.CheckSecurity;
 import com.kelsonthony.costumer.domain.entity.CustomerEntity;
 import com.kelsonthony.costumer.domain.repository.CustomerRepository;
 import com.kelsonthony.costumer.domain.service.CustomerService;
@@ -40,8 +41,9 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @CheckSecurity.Customers.canRead
     @GetMapping
-    public PagedModel<CustomerModel> listClient(@PageableDefault(size = 10)Pageable pageable) {
+    public PagedModel<CustomerModel> listClient(@PageableDefault(size = 10) Pageable pageable) {
         Page<CustomerEntity> clientPage = customerRepository.findAll(pageable);
 
         PagedModel<CustomerModel> clientPageModel = pagedResourcesAssembler
@@ -50,6 +52,7 @@ public class CustomerController {
         return clientPageModel;
     }
 
+    @CheckSecurity.Customers.canEdit
     @GetMapping("/{clientId}")
     public CustomerModel getClientId(@PathVariable Long clientId) {
         CustomerEntity client = customerService.searchOrFail(clientId);
@@ -57,6 +60,7 @@ public class CustomerController {
         return customerModelAssembler.toModel(client);
     }
 
+    //@CheckSecurity.Customers.canConsult
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerModel createClient(@RequestBody @Valid CustomerInput customerInput) {
@@ -68,6 +72,7 @@ public class CustomerController {
         return customerModelAssembler.toModel(customerEntity);
     }
 
+    @CheckSecurity.Customers.canEdit
     @PutMapping("/{clientId}")
     public CustomerModel updateClient(@PathVariable Long clientId,
                                       @RequestBody @Valid CustomerInput customerInput) {
@@ -81,6 +86,7 @@ public class CustomerController {
         return customerModelAssembler.toModel(customerEntity);
     }
 
+    @CheckSecurity.Customers.canEdit
     @DeleteMapping("/{clientId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeClient(@PathVariable Long clientId) {

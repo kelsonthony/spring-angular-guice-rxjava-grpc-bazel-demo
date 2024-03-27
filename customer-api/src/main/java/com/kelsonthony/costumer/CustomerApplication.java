@@ -1,13 +1,23 @@
 package com.kelsonthony.costumer;
 
+import com.kelsonthony.costumer.core.io.Base64ProtocolResolver;
+import com.kelsonthony.costumer.infrastructure.repository.CustomJpaRepositoryImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+import java.util.TimeZone;
 
 @SpringBootApplication
+@EnableJpaRepositories(repositoryBaseClass = CustomJpaRepositoryImpl.class)
 public class CustomerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CustomerApplication.class, args);
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+
+		var app = new SpringApplication(CustomerApplication.class);
+		app.addListeners(new Base64ProtocolResolver());
+		app.run(args);
 	}
 
 }
